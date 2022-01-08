@@ -17,10 +17,10 @@ public class Lifter {
     private final DcMotor motor;
     private LiftState state;
     private TouchSensor touch;
-    private final int targetLiftPos = 455; // 430 was old
+    private final int targetLiftPos = 445; // 430 was old
     private int targetDropPos = -55;
-    private final double LiftPow = 0.5;
-    private final double DropPow = -0.3;
+    private final double LiftPow = 0.65;
+    private final double DropPow = -0.35;
     private int currentTargetPos;
 
     public Lifter(HardwareMap hardwareMap){

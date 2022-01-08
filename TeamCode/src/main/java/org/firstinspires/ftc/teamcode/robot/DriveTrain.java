@@ -24,7 +24,7 @@ public class DriveTrain {
     private double currentTargDeg;
     private final double rotPerInch = 0.0795774715459477;
     private final double ticksPerRev = 537.6;
-    private final double degPerRot = 75;
+    private final double degPerRot = 1;//75
 
 
     public DriveTrain(HardwareMap hardwareMap, IMU robotIMU){
@@ -134,12 +134,12 @@ public class DriveTrain {
 
     public void turnRight(int degrees, double speed){
         imu.resetAngle();
-        currentTargDeg = degrees;
+        currentTargDeg = -degrees;
         resetMotors();
         SetTargPos((int) (((double) degrees/degPerRot) * ticksPerRev));
         br.setTargetPosition(-br.getTargetPosition());
         fr.setTargetPosition(-fr.getTargetPosition());
-        setState(DriveState.TURNING_L);
+        setState(DriveState.TURNING_R);
         bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -188,17 +188,21 @@ public class DriveTrain {
     }
     private void rampPow(){
         double currentDelta;
-        double minPower = 0.07;
+        double minPower = 0.1;
         if(Math.abs(getFrPow()) > minPower){
             if(state == DriveState.DRIVING){
                 currentDelta = Math.abs(getTargetPos() - getCurrentPos());
+                if(currentDelta < 0.5 * Math.abs(getTargetPos())){
+                    adjustAllPow(0.02);
 
             }
             else{
                 currentDelta = Math.abs(imu.getAngle() - currentTargDeg);
+                if(currentDelta < 0.6 * Math.abs(currentTargDeg)){
+                    adjustAllPow(0.05);
+                }
             }
-            if(currentDelta < 0.5 * Math.abs(getTargetPos())){
-                adjustAllPow(0.01);
+
             }
         }
     }
@@ -238,14 +242,28 @@ public class DriveTrain {
                 double correction = imu.checkDirection();
                 adjustPow(correction);
                 rampPow();
+                break;
+            case STRAFING:
+                if(getCurrentPos() == getTargetPos()){
+                    setState(DriveState.IDLE);
+                    StopMotors();
+                    break;
+                }
+                break;
             case TURNING_L:
-                rampPow();
+                //rampPow();
                 if(imu.getAngle() >= currentTargDeg && imu.getAngle() != 0){
                     setState(DriveState.IDLE);
                     StopMotors();
                     break;
 
                 }
+                if(getCurrentPos() > getTargetPos() + 50){
+                    setState(DriveState.IDLE);
+                    StopMotors();
+                    break;
+                }
+                break;
             case TURNING_R:
                 rampPow();
                 if(imu.getAngle() <= currentTargDeg && imu.getAngle() != 0){
@@ -253,6 +271,10 @@ public class DriveTrain {
                     StopMotors();
                     break;
                 }
+                break;
+            case IDLE:
+
+            case TELE:
         }
     }
 
@@ -308,7 +330,7 @@ public class DriveTrain {
 
     // Getters
     public double getFrPow(){return fr.getPower();}
-    public int getTargetPos(){return fr.getTargetPosition();}
-    public int getCurrentPos(){return fr.getCurrentPosition();}
+    public int getTargetPos(){return br.getTargetPosition();}
+    public int getCurrentPos(){return br.getCurrentPosition();}
     public DriveState getState(){return state;}
 }

@@ -17,7 +17,7 @@ public class AutoTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot = new Ninjabot(hardwareMap);
         sleep(1000);
-        robot.webcam.detect();
+        /*robot.webcam.detect();
         while(robot.webcam.getPosition() == CameraPipeline.DuckPosition.UNKNOWN){
             if (robot.webcam.getPosition() == CameraPipeline.DuckPosition.ONE) {
                 telemetry.addData("Rings: ", "ONE");
@@ -35,24 +35,33 @@ public class AutoTest extends LinearOpMode {
             }
             telemetry.update();
 
-        }
+        }*/
         waitForStart();
 
-        robot.driveTrain.MoveTank(24, 0.5);
-        waitUntilMove();
-        robot.driveTrain.MoveTank(-24, 0.5);
-        waitUntilMove();
-        robot.driveTrain.strafeRight(24, 0.5);
-        waitUntilMove();
-        robot.driveTrain.strafeLeft(24, 0.5);
-        waitUntilMove();
-        robot.driveTrain.turnLeft(90, 0.5);
+        //robot.driveTrain.MoveTank(24, 0.5);
+        //waitUntilMove();
+        //robot.driveTrain.MoveTank(-24, 0.5);
+        //waitUntilMove();
+        //robot.driveTrain.strafeRight(24, 0.5);
+        //waitUntilMove();
+        //robot.driveTrain.strafeLeft(24, 0.5);
+        //waitUntilMove();
+        //robot.driveTrain.turnLeft(90, 0.5);
+        //waitUntilMove();
+        robot.driveTrain.turnRight(90, 0.5);
         waitUntilMove();
     }
 
     private void waitUntilMove(){
-        while(robot.driveTrain.getState() == DriveTrain.DriveState.DRIVING || robot.driveTrain.getState() == DriveTrain.DriveState.TURNING_L || robot.driveTrain.getState() == DriveTrain.DriveState.TURNING_R){
+        while(robot.driveTrain.getState() == DriveTrain.DriveState.DRIVING || robot.driveTrain.getState() == DriveTrain.DriveState.TURNING_L || robot.driveTrain.getState() == DriveTrain.DriveState.TURNING_R || robot.driveTrain.getState() == DriveTrain.DriveState.STRAFING){
             robot.update();
+            telemetry.addData("Robot Targ:", robot.driveTrain.getTargetPos());
+            telemetry.addData("Robot Curr:", robot.driveTrain.getTargetPos());
+            telemetry.addData("Robot State:", robot.driveTrain.getState());
+            telemetry.addData("Robot State:", robot.driveTrain.getState());
+
+            telemetry.update();
+
         }
 
     }

@@ -43,23 +43,26 @@ public class Autonomous extends LinearOpMode {
             robot.driveTrain.MoveTank(24, 0.5);
             waitUntilMove();
             robot.imu.resetAngle();
-            robot.driveTrain.turnLeft(112, 0.3);
+            robot.driveTrain.turnLeft(120, 0.15);
             waitUntilMove();
             robot.lifter.liftToTop();
             waitForLifter();
-            robot.driveTrain.MoveTank(-10, 0.3);
+            robot.driveTrain.MoveTank(-12, 0.3);
             waitUntilMove();
+            telemetry.addData("Passed:", "True");
+            telemetry.update();
             robot.cradle.openGate();
-            robot.driveTrain.MoveTank(16, 0.5);
+            waitForCradle();
+            robot.driveTrain.MoveTank(12, 0.5);
             waitUntilMove();
             robot.cradle.closeGate();
             robot.lifter.dropDown();
             robot.driveTrain.MoveTank(16, 0.4);
             waitUntilMove();
             robot.imu.resetAngle();
-            robot.driveTrain.turnRight(130, 0.3);
+            robot.driveTrain.turnRight(138, 0.15);
             waitUntilMove();
-            robot.driveTrain.MoveTank(-11, 0.2);
+            robot.driveTrain.MoveTank(-13, 0.2);
             waitUntilMove();
             robot.turnTable.setPower();
             ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -69,7 +72,7 @@ public class Autonomous extends LinearOpMode {
                 robot.turnTable.setPower();
             }
             robot.turnTable.stopTurnTable();
-            robot.driveTrain.MoveTank(12, 0.7);
+            robot.driveTrain.MoveTank(16, 0.7);
             waitUntilMove();
             robot.imu.resetAngle();
             robot.driveTrain.turnRight(62, 0.3);
@@ -82,14 +85,27 @@ public class Autonomous extends LinearOpMode {
     }
 
     private void waitUntilMove(){
-        while(robot.driveTrain.getState() == DriveTrain.DriveState.DRIVING || robot.driveTrain.getState() == DriveTrain.DriveState.TURNING_L || robot.driveTrain.getState() == DriveTrain.DriveState.TURNING_R){
+        while(robot.driveTrain.getState() == DriveTrain.DriveState.DRIVING || robot.driveTrain.getState() == DriveTrain.DriveState.TURNING_L || robot.driveTrain.getState() == DriveTrain.DriveState.TURNING_R || robot.driveTrain.getState() == DriveTrain.DriveState.STRAFING){
             robot.update();
+            telemetry.addData("Robot Targ:", robot.driveTrain.getTargetPos());
+            telemetry.addData("Robot State:", robot.driveTrain.getState());
+            telemetry.update();
         }
 
     }
 
     private void waitForLifter(){
         while(robot.lifter.getState() == Lifter.LiftState.LIFTING || robot.lifter.getState() == Lifter.LiftState.DROPPING){
+            robot.update();
+            telemetry.addData("Robot Targ:", robot.lifter.getEncoderCount());
+            telemetry.addData("IMU deg:", robot.imu.getAngle());
+            telemetry.addData("Robot State:", robot.lifter.getState());
+            telemetry.update();
+
+        }
+    }
+    private void waitForCradle(){
+        while(robot.cradle.getGatePos() != robot.cradle.getTargetPos()){
             robot.update();
         }
     }

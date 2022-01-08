@@ -13,7 +13,7 @@ public class Cradle {
 
     public Cradle(HardwareMap hw){
         this.gate = hw.get(Servo.class, "grasper");
-        this.gate.setPosition(0.18);//Base
+        this.gate.setPosition(0);//Base
         currentTarget = 0;
     }
     public void openGate(){
