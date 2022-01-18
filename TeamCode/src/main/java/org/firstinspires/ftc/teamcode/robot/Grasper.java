@@ -23,7 +23,7 @@ public class Grasper {
     private int currentTargetPos = 0;
     private GrasperState state;
     public double GRASPER_OPEN = 0.25;
-    public double GRASPER_CLOSE = 0.0;
+    public double GRASPER_CLOSE = 1;
     private double currentGrasperTarget = GRASPER_CLOSE;
 
     public Grasper(HardwareMap hw){
@@ -41,6 +41,7 @@ public class Grasper {
         currentTargetPos = target1Lift;
         this.grasperLifter.setTargetPosition(currentTargetPos);
         this.grasperLifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.grasperLifter.setPower(0.5);
 
     }
     public void liftTo2(){
@@ -48,14 +49,14 @@ public class Grasper {
         currentTargetPos = target2Lift;
         this.grasperLifter.setTargetPosition(currentTargetPos);
         this.grasperLifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        this.grasperLifter.setPower(0.6);
     }
     public void dropDown(){
         this.state = GrasperState.DROPPING;
         currentTargetPos = basePos;
         this.grasperLifter.setTargetPosition(currentTargetPos);
         this.grasperLifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        this.grasperLifter.setPower(0.3);
     }
 
     public void openGate(){
@@ -70,22 +71,14 @@ public class Grasper {
     public void update(){
         double liftPow = 0.5;
         if(state == GrasperState.LIFTING_1){
-            if(getEncoderCount() == currentTargetPos){
+            if(getEncoderCount() >= currentTargetPos){
                 state = GrasperState.REACHED_1;
-            }
-            else{
-                this.grasperLifter.setTargetPosition(currentTargetPos);
-                this.grasperLifter.setPower(liftPow);
             }
 
         }
         else if(state == GrasperState.LIFTING_2){
-            if(getEncoderCount() == currentTargetPos){
+            if(getEncoderCount() >= currentTargetPos){
                 state = GrasperState.REACHED_2;
-            }
-            else{
-                this.grasperLifter.setTargetPosition(currentTargetPos);
-                this.grasperLifter.setPower(liftPow);
             }
 
         }
@@ -120,4 +113,5 @@ public class Grasper {
     }
     public int getTarget1Lift(){return target1Lift;}
     public int getTarget2Lift(){return target2Lift;}
+    public GrasperState getState(){return state;}
 }

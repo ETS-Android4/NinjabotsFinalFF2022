@@ -11,7 +11,7 @@ public class TurnTable {
         this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void setPower(){
-        double POWER = 0.48;
+        double POWER = 0.6;//0.48
         motor.setPower(POWER);
     }
     public void stopTurnTable(){

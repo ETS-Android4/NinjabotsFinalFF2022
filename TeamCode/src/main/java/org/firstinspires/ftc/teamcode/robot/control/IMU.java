@@ -53,12 +53,34 @@ public class IMU {
     {
         // Our P Constant to find the adjusted angle needed
         double correction, angle; //here gain is the kP
+        double kP = 0.0005;
+
         angle = getAngle();
+        correction = -angle;
+        /*
         if (angle == 0)
             correction = 0;             // no adjustment.
         else
             correction = -angle;        // reverse sign of angle for correction.
-        double kP = 0.0005;
+         */
+        correction = correction * kP;
+        return correction;
+    }
+
+    public double checkDirection(double targDegrees)
+    {
+        // Our P Constant to find the adjusted angle needed
+        double correction, angle; //here gain is the kP
+        double kP = 0.00005;
+
+        angle = getAngle();
+        correction = targDegrees - angle;
+        /*
+        if (angle == targDegrees)
+            correction = 0;             // no adjustment.
+        else
+            correction = targDegrees-angle;        // reverse sign of angle for correction
+         */
         correction = correction * kP;
         return correction;
     }

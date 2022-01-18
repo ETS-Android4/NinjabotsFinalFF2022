@@ -38,6 +38,7 @@ public class TeleOp extends OpMode {
         }
         if(gamepad2.dpad_left){
             Ninjabot.intake.runIntake();
+            Ninjabot.cradle.openGate();
         }
         else if (gamepad2.dpad_right){
             Ninjabot.intake.stopIntake();
@@ -53,6 +54,7 @@ public class TeleOp extends OpMode {
         if(gamepad2.right_trigger > deadZone){
             Ninjabot.cradle.closeGate();
             Ninjabot.intake.stopIntake();
+            Ninjabot.lifter.liftToTop();
         }
         else if (gamepad2.left_trigger > deadZone){
             Ninjabot.cradle.openGate();
@@ -67,12 +69,12 @@ public class TeleOp extends OpMode {
         else if (gamepad2.x){
             Ninjabot.grasper.dropDown();
         }
-        if(gamepad2.right_trigger > 0.3){
+        /*if(gamepad2.right_trigger > 0.3){
             Ninjabot.grasper.openGate();
         }
         else if (gamepad2.left_trigger > 0.3){
             Ninjabot.grasper.closeGate();
-        }
+        }*/
 
         Ninjabot.update();
 

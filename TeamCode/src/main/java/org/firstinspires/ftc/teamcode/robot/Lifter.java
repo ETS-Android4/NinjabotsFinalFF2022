@@ -39,50 +39,59 @@ public class Lifter {
         currentTargetPos = targetLiftPos;
         this.motor.setTargetPosition(currentTargetPos);
         this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        this.motor.setPower(LiftPow);
     }
+
     public void dropDown(){
         this.state = LiftState.DROPPING;
         currentTargetPos = targetDropPos;
         this.motor.setTargetPosition(currentTargetPos);
         this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        this.motor.setPower(DropPow);
     }
 
+    private boolean isTouched()
+    {
+        return (this.touch.getValue() == 1.0);
+    }
 
     public void update(){
         if(state == LiftState.LIFTING){
-            if(getEncoderCount() == currentTargetPos){
+            if(getEncoderCount() >= currentTargetPos){
                 state = LiftState.LIFTED;
             }
+            /*
             else{
                 this.motor.setTargetPosition(currentTargetPos);
                 this.motor.setPower(LiftPow);
             }
-
+             */
         }
         else if(state == LiftState.DROPPING){
-            if(touch.getValue() == 1.0){
+            if(isTouched())
+            {
                 state = LiftState.IDLE;
             }
+            /*
             else{
                 this.motor.setTargetPosition(currentTargetPos);
                 motor.setPower(DropPow);
             }
+             */
         }
         else if (state == LiftState.IDLE){
-            motor.setTargetPosition(targetDropPos);
+            motor.setTargetPosition(currentTargetPos);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setPower(-0.02);
         }
-
         else if (state == LiftState.INIT){
             motor.setTargetPosition(-500);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            motor.setPower(-0.08);
+            motor.setPower(-0.3);
             //stall();
-            if(touch.getValue() == 1.0){
-                targetDropPos = motor.getCurrentPosition();
+            if(isTouched()){
+                targetDropPos = (motor.getCurrentPosition() - 100);
+                currentTargetPos = targetDropPos;
                 state = LiftState.IDLE;
             }
         }
@@ -91,7 +100,6 @@ public class Lifter {
                 this.motor.setTargetPosition(currentTargetPos);
                 this.motor.setPower(LiftPow);
             }
-
         }
     }
 
