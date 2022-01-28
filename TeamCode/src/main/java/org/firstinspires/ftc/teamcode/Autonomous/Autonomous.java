@@ -23,12 +23,18 @@ public class Autonomous extends LinearOpMode {
         while(level == -1){
             if (robot.webcam.getPosition() == CameraPipeline.DuckPosition.ONE) {
                 telemetry.addData("Rings: ", "ONE");
+                telemetry.addData("Pos 1:", robot.webcam.getAverage1());
+                telemetry.addData("Pos 2:", robot.webcam.getAverage2());
                 level = 1;
             } else if (robot.webcam.getPosition() == CameraPipeline.DuckPosition.TWO) {
                 telemetry.addData("Rings: ", "TWO");
+                telemetry.addData("Pos 1:", robot.webcam.getAverage1());
+                telemetry.addData("Pos 2:", robot.webcam.getAverage2());
                 level = 2;
             } else if (robot.webcam.getPosition() == CameraPipeline.DuckPosition.THREE) {
                 telemetry.addData("Rings: ", "THREE");
+                telemetry.addData("Pos 1:", robot.webcam.getAverage1());
+                telemetry.addData("Pos 2:", robot.webcam.getAverage2());
                 level = 3;
             }
             else{
@@ -36,6 +42,8 @@ public class Autonomous extends LinearOpMode {
                 robot.update();
                 sleep(1);
                 telemetry.addData("Rings: ", "Unknown");
+                telemetry.addData("Pos 1:", robot.webcam.getAverage1());
+                telemetry.addData("Pos 2:", robot.webcam.getAverage2());
             }
             telemetry.addData("Cam:", robot.webcam.getPosition());
             telemetry.update();
@@ -44,7 +52,7 @@ public class Autonomous extends LinearOpMode {
         waitForStart();
 
         if(level == 1){
-            robot.driveTrain.MoveTank(24, 0.5);
+            robot.driveTrain.MoveTank(22, 0.5);
             waitUntilMove();
             robot.imu.resetAngle();
             robot.driveTrain.turnLeft(120, 0.5);
@@ -64,11 +72,9 @@ public class Autonomous extends LinearOpMode {
             robot.driveTrain.MoveTank(16, 0.4);
             waitUntilMove();
             robot.imu.resetAngle();
-            robot.driveTrain.turnRight(138, 0.5);
+            robot.driveTrain.turnRight(159, 0.5);
             waitUntilMove();
-            robot.driveTrain.MoveTank(-14, 0.4);
-            waitUntilMove();
-            robot.driveTrain.MoveTank(-2 ,0.15);
+            robot.driveTrain.MoveTank(-14, 0.3);
             waitUntilMove();
             robot.turnTable.setPower();
             ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -77,41 +83,38 @@ public class Autonomous extends LinearOpMode {
                 robot.update();
             }
             robot.turnTable.stopTurnTable();
-            robot.driveTrain.MoveTank(19, 0.7); //16
+            robot.driveTrain.MoveTank(21, 0.7); //16
             waitUntilMove();
             robot.imu.resetAngle();
-            robot.driveTrain.turnRight(62, 0.3);
+            robot.driveTrain.turnRight(63, 0.3);
             waitUntilMove();
-            robot.driveTrain.strafeRight(56, 0.9); //42
+            robot.driveTrain.MoveTank(93, 0.5);
+            robot.driveTrain.addLeftPow(0.2);
             waitUntilMove();
-            robot.driveTrain.MoveTank(75, 1);
-            waitUntilMove();
+
         }
 
 
         else if (level == 3){
             robot.grasper.init();
-            robot.driveTrain.MoveTank(30,0.5);
+            robot.driveTrain.MoveTank(31,0.5);
             waitUntilMove();
-            robot.driveTrain.turnRight(90,0.5);
+            robot.driveTrain.turnRight(108, 0.65);
             waitUntilMove();
-            robot.driveTrain.MoveTank(7, 0.3);
+            robot.driveTrain.MoveTank(26, 0.4);
             waitUntilMove();
-            robot.grasper.liftTo1();
-            robot.driveTrain.turnRight(60, 0.2);
-            waitUntilMove();
-            waitForGrasper();
             robot.grasper.openGate();
-            robot.driveTrain.MoveTank(12,0.5);
+            Thread.sleep(200);
+            robot.driveTrain.turnRight(160, 0.5);
             waitUntilMove();
-            robot.driveTrain.turnLeft(80, 0.4);
-            robot.grasper.dropDown();
+            robot.driveTrain.MoveTank(32, 0.65);
             waitUntilMove();
-            robot.driveTrain.MoveTank(-20, 0.5);
+            robot.driveTrain.turnRight(120, 0.65);
             waitUntilMove();
-            robot.driveTrain.turnLeft(33, 0.3);
+            robot.grasper.liftToHigh();
+            robot.driveTrain.MoveTank(-21, 0.3);
             waitUntilMove();
-            robot.driveTrain.MoveTank(-16, 0.35);
+            robot.driveTrain.MoveTank(-5, 0.21);
             waitUntilMove();
             robot.turnTable.setPower();
             ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -120,41 +123,40 @@ public class Autonomous extends LinearOpMode {
                 robot.update();
             }
             robot.turnTable.stopTurnTable();
-            robot.driveTrain.MoveTank(19, 0.7); //16
+            robot.driveTrain.MoveTank(20, 0.5);
             waitUntilMove();
-            robot.imu.resetAngle();
-            robot.driveTrain.turnRight(55, 0.3);
+            robot.driveTrain.turnRight(67, 0.4);
             waitUntilMove();
-            robot.driveTrain.strafeRight(56, 0.9); //42
-            waitUntilMove();
-            robot.driveTrain.MoveTank(75, 1);
+            robot.grasper.dropDown();
+            robot.driveTrain.MoveTank(96, 0.67);
+            robot.driveTrain.addLeftPow(0.17);
             waitUntilMove();
 
         }
         else if (level == 2){
             robot.grasper.init();
-            robot.driveTrain.MoveTank(30,0.5);
+            robot.driveTrain.MoveTank(36,0.5);
             waitUntilMove();
-            robot.driveTrain.turnRight(90,0.5);
+            robot.driveTrain.MoveTank(-5,0.5);
             waitUntilMove();
-            robot.driveTrain.MoveTank(7, 0.3);
+            robot.driveTrain.turnRight(115, 0.65);
             waitUntilMove();
             robot.grasper.liftTo2();
-            robot.driveTrain.turnRight(60, 0.2);
-            waitUntilMove();
             waitForGrasper();
+            robot.driveTrain.MoveTank(26, 0.4);
+            waitUntilMove();
             robot.grasper.openGate();
             Thread.sleep(200);
-            robot.driveTrain.MoveTank(12,0.5);
+            robot.driveTrain.turnRight(160, 0.5);
             waitUntilMove();
-            robot.driveTrain.turnLeft(80, 0.4);
-            robot.grasper.dropDown();
+            robot.driveTrain.MoveTank(32, 0.65);
             waitUntilMove();
-            robot.driveTrain.MoveTank(-20, 0.5);
+            robot.driveTrain.turnRight(115, 0.65);
             waitUntilMove();
-            robot.driveTrain.turnLeft(33, 0.3);
+            robot.grasper.liftToHigh();
+            robot.driveTrain.MoveTank(-24, 0.3);
             waitUntilMove();
-            robot.driveTrain.MoveTank(-18, 0.35);
+            robot.driveTrain.MoveTank(-2, 0.19);
             waitUntilMove();
             robot.turnTable.setPower();
             ElapsedTime time = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
@@ -163,15 +165,15 @@ public class Autonomous extends LinearOpMode {
                 robot.update();
             }
             robot.turnTable.stopTurnTable();
-            robot.driveTrain.MoveTank(19, 0.5); //16
+            robot.driveTrain.MoveTank(20, 0.5);
             waitUntilMove();
-            robot.imu.resetAngle();
-            robot.driveTrain.turnRight(30, 0.35);
+            robot.driveTrain.turnRight(66, 0.4);
             waitUntilMove();
-            robot.driveTrain.strafeRight(56, 0.9); //42
+            robot.grasper.dropDown();
+            robot.driveTrain.MoveTank(96, 0.67);
+            robot.driveTrain.addLeftPow(0.17);
             waitUntilMove();
-            robot.driveTrain.MoveTank(75, 1);
-            waitUntilMove();
+
 
         }
     }

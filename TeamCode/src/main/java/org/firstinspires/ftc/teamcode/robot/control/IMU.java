@@ -53,7 +53,7 @@ public class IMU {
     {
         // Our P Constant to find the adjusted angle needed
         double correction, angle; //here gain is the kP
-        double kP = 0.0005;
+        double kP = 0.00005;
 
         angle = getAngle();
         correction = -angle;

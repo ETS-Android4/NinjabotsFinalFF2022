@@ -13,12 +13,15 @@ public class Grasper {
         IDLE,
         LIFTING_1,
         LIFTING_2,
+        LIFTING_HIGH,
         DROPPING,
         REACHED_1,
-        REACHED_2
+        REACHED_2,
+        REACHED_HIGH
     }
-    private final int target1Lift = 136;
-    private final int target2Lift = 354; // Figure this out
+    private final int target1Lift = 115;
+    private final int target2Lift = 320; // Figure this out
+    private final int targetSuperHighLift = 500;
     private final int basePos = 0;
     private int currentTargetPos = 0;
     private GrasperState state;
@@ -47,6 +50,14 @@ public class Grasper {
     public void liftTo2(){
         this.state = GrasperState.LIFTING_2;
         currentTargetPos = target2Lift;
+        this.grasperLifter.setTargetPosition(currentTargetPos);
+        this.grasperLifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.grasperLifter.setPower(0.6);
+    }
+
+    public void liftToHigh(){
+        this.state = GrasperState.LIFTING_HIGH;
+        currentTargetPos = targetSuperHighLift;
         this.grasperLifter.setTargetPosition(currentTargetPos);
         this.grasperLifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.grasperLifter.setPower(0.6);
@@ -82,16 +93,18 @@ public class Grasper {
             }
 
         }
+        else if(state == GrasperState.LIFTING_HIGH){
+            if(getEncoderCount() >= currentTargetPos){
+                state = GrasperState.REACHED_HIGH;
+            }
+
+        }
 
         else if(state == GrasperState.DROPPING){
-            if(getEncoderCount() == basePos){
+            if(getEncoderCount() <= basePos + 20){
                 state = GrasperState.IDLE;
             }
-            else{
-                this.grasperLifter.setTargetPosition(currentTargetPos);
-                double dropPow = -0.3;
-                grasperLifter.setPower(dropPow);
-            }
+
         }
         else if (state == GrasperState.IDLE){
             grasperLifter.setTargetPosition(basePos);
@@ -99,7 +112,7 @@ public class Grasper {
             grasperLifter.setPower(0.1);
         }
 
-        else if (state == GrasperState.REACHED_1 || state == GrasperState.REACHED_2){
+        else if (state == GrasperState.REACHED_1 || state == GrasperState.REACHED_2 || state == GrasperState.REACHED_HIGH){
             if(getEncoderCount() != currentTargetPos){
                 this.grasperLifter.setTargetPosition(currentTargetPos);
                 this.grasperLifter.setPower(liftPow);

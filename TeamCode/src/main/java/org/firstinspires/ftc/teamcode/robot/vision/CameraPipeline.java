@@ -24,17 +24,18 @@ public class CameraPipeline extends OpenCvPipeline {
     static final Scalar BLUE = new Scalar(0, 0, 255);
     static final Scalar RED = new Scalar(255, 0, 0);
     static final Scalar GREEN = new Scalar(0, 255, 0);
+    static final Scalar BLACK = new Scalar(0, 0, 0);
 
     /*
      * The core values which define the location and size of the sample regions
      */
-    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(31, 75);
-    static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(31, 200);
+    static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(53, 100);
+    static final Point REGION2_TOPLEFT_ANCHOR_POINT = new Point(56, 225);
     //static final Point REGION3_TOPLEFT_ANCHOR_POINT = new Point(150, 75);
 
-    static final int REGION_WIDTH = 25;
-    static final int REGION_HEIGHT = 25;
-    static final int THRESHOLD = 145;
+    static final int REGION_WIDTH = 15;
+    static final int REGION_HEIGHT = 15;
+    static final int THRESHOLD = 137;
 
     Point region1_pointA = new Point(
             REGION1_TOPLEFT_ANCHOR_POINT.x,
@@ -110,12 +111,12 @@ public class CameraPipeline extends OpenCvPipeline {
                 -1); // Thickness of the rectangle lines
 
         position = DuckPosition.UNKNOWN; // Record our analysis
-        if(avg1 > avg2 && avg1 > THRESHOLD){
+        if(avg1 < avg2 && avg1 < THRESHOLD){
             position = DuckPosition.ONE;
             bestRegion = region1_pointA;
             bestRegion2 = region1_pointB;
         }
-        else if(avg2 > avg1 && avg2 > THRESHOLD){
+        else if(avg2 < avg1 && avg2 < THRESHOLD){
             position = DuckPosition.TWO;
             bestRegion = region2_pointA;
             bestRegion2 = region2_pointB;

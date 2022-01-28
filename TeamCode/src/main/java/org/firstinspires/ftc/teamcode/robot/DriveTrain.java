@@ -42,6 +42,8 @@ public class DriveTrain {
 
         br.setDirection(DcMotorSimple.Direction.REVERSE);
         fr.setDirection(DcMotorSimple.Direction.REVERSE);
+        bl.setDirection(DcMotorSimple.Direction.REVERSE);
+        fl.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Add IMU and set initial state to IDLE
         this.imu = robotIMU;
@@ -161,6 +163,11 @@ public class DriveTrain {
         else{
             bl.setPower(bl.getPower() - inc);
         }
+    }
+
+    public void addLeftPow(double inc){
+        bl.setPower(br.getPower() + inc);
+        fl.setPower(fl.getPower() + inc);
     }
 
     private void rampPow()
